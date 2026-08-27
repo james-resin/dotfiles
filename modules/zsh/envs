@@ -1,0 +1,6 @@
+export EDITOR=nvim
+export ZSH="$HOME/.oh-my-zsh"
+
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$HOME/odin:$HOME/ols:/opt/cuda/bin:$PATH"
+
+[ -f /opt/miniconda3/etc/profile.d/conda.sh ] && source /opt/miniconda3/etc/profile.d/conda.sh
