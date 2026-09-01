@@ -11,6 +11,7 @@
     ../modules/fonts.nix
     ../modules/git.nix
     ../modules/zsh.nix
+    ../modules/bash-path.nix
     ../modules/tmux.nix
     ../modules/cli.nix
     ../modules/nvim.nix
