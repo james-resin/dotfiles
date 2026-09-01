@@ -8,7 +8,13 @@
 # Rather than enabling programs.bash (which would make home-manager own
 # ~/.bashrc outright and clobber conda's init block), append two guarded
 # blocks that leave the rest of the file alone:
-#   1. source home-manager's session vars, so the profile's bin/ is on PATH
+#   1. put ~/.nix-profile/bin on PATH directly. NOTE: this is deliberately
+#      NOT done by sourcing hm-session-vars.sh -- that file only carries
+#      misc exports (locale, starship config) and does not touch PATH.
+#      PATH normally reaches bash via a system-wide /etc/profile.d/nix*.sh
+#      the installer sets up, but that's flaky across distros/install modes
+#      (e.g. multi-user installs where /etc/profile.d isn't sourced for
+#      some shell invocations), so just set it ourselves unconditionally.
 #   2. once that's true, exec into zsh for interactive shells -- the
 #      root-free equivalent of chsh, since chsh needs the shell listed in
 #      /etc/shells, which requires root to edit.
@@ -30,6 +36,21 @@
           echo ""
           echo "$SESSION_VARS_MARKER"
           echo '[ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ] && . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"'
+        } >> "$RCFILE"
+      fi
+
+      # Separate marker from the block above: hm-session-vars.sh doesn't
+      # touch PATH, so this needs to always run even on rc files that
+      # already have the (now insufficient) session-vars block appended.
+      NIX_PATH_MARKER="# ensure ~/.nix-profile/bin is on PATH"
+      if ! grep -qF "$NIX_PATH_MARKER" "$RCFILE"; then
+        {
+          echo ""
+          echo "$NIX_PATH_MARKER"
+          echo 'case ":$PATH:" in'
+          echo '  *":$HOME/.nix-profile/bin:"*) ;;'
+          echo '  *) export PATH="$HOME/.nix-profile/bin:$PATH" ;;'
+          echo 'esac'
         } >> "$RCFILE"
       fi
 
