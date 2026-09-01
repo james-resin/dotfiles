@@ -50,4 +50,14 @@ let dot = "${config.home.homeDirectory}/dotfiles"; in
     enable              = true;
     enableZshIntegration = true;
   };
+
+  programs.direnv = {
+    enable              = true;
+    enableZshIntegration = true;
+    nix-direnv.enable    = true;
+    # Adds `use devenv` support (https://devenv.sh/integrations/direnv/).
+    stdlib = ''
+      eval "$(${pkgs.devenv}/bin/devenv direnvrc)"
+    '';
+  };
 }

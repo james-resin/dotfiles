@@ -2,4 +2,10 @@ theme = "Catppuccin Macchiato"
 font-family = "IosevkaTerm Nerd Font"
 font-size = 14
 
+# Default copy-on-select only writes to the X11/Wayland selection buffer
+# (middle-click paste). `clipboard` also writes to the system clipboard so
+# a normal paste (right-click/Ctrl+Shift+V) works right after highlighting,
+# without an explicit copy step.
+copy-on-select = clipboard
+
 keybind = ctrl+f=text:tmux-sessionizer\n

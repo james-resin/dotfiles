@@ -20,6 +20,9 @@ let dot = "${config.home.homeDirectory}/dotfiles"; in
     btop
     rsync
     devenv
+	s5cmd
+	uv
+	google-cloud-sdk
   ];
 
   home.file.".local/bin" = {
