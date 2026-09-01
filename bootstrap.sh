@@ -7,20 +7,25 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG="${1:-headless}"
 
 if ! command -v nix >/dev/null 2>&1; then
-    echo "==> Installing Nix (Determinate Systems installer)"
+    echo "==> nix not on PATH in this shell; installing/checking via Determinate Systems installer"
     curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --no-confirm
 
-    # Pick up nix in this shell without requiring a new login session.
-    if [[ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
-        . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-    elif [[ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]]; then
-        . "$HOME/.nix-profile/etc/profile.d/nix.sh"
-    else
-        echo "Could not find a nix profile script to source; open a new shell and re-run this script." >&2
+    # The installer may report an already-completed install (e.g. baked into
+    # the image, or installed by someone else) without touching this shell's
+    # PATH. Rather than guess which profile-script filename applies, just
+    # prepend the known bin dirs directly.
+    for bindir in /nix/var/nix/profiles/default/bin "$HOME/.nix-profile/bin"; do
+        if [[ -d "$bindir" ]]; then
+            PATH="$bindir:$PATH"
+        fi
+    done
+
+    if ! command -v nix >/dev/null 2>&1; then
+        echo "nix still not found on PATH after install. Open a new shell (so /etc/bashrc or /etc/zshrc can pick it up) and re-run this script." >&2
         exit 1
     fi
 else
-    echo "==> Nix already installed, skipping"
+    echo "==> Nix already on PATH, skipping install"
 fi
 
 echo "==> Activating home-manager config '$CONFIG' from $SCRIPT_DIR"
