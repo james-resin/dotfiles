@@ -35,6 +35,6 @@ if [[ "$CONFIG" == "headless" ]]; then
     IMPURE_FLAG=(--impure)
 fi
 
-nix run home-manager/master -- switch --flake "$SCRIPT_DIR#$CONFIG" "${IMPURE_FLAG[@]}" -b bak
+nix run --extra-experimental-features 'nix-command flakes' home-manager/master -- switch --flake "$SCRIPT_DIR#$CONFIG" "${IMPURE_FLAG[@]}" -b bak
 
 echo "==> Done. Future activations: home-manager switch --flake $SCRIPT_DIR#$CONFIG -b bak"

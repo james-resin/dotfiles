@@ -10,6 +10,8 @@
     ../modules/gnome.nix
   ];
 
+  dotfiles.tmux.prefix = "C-a";
+
   home.packages = with pkgs; [
     slack
     inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
