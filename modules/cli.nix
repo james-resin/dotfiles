@@ -23,6 +23,7 @@ let dot = "${config.home.homeDirectory}/dotfiles"; in
 	s5cmd
 	uv
 	google-cloud-sdk
+    just
   ];
 
   home.file.".local/bin" = {
