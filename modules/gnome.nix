@@ -102,6 +102,7 @@ in
       custom-keybindings = [
         "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
         "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
       ];
     };
 
@@ -115,6 +116,17 @@ in
       name = "Open Files";
       command = "nautilus";
       binding = "<Super>e";
+    };
+
+    # Was previously set up only through the Settings GUI, so every
+    # home-manager switch reset custom-keybindings (above) to just
+    # custom0/custom1 and silently dropped this entry from the list --
+    # the underlying dconf data survived, but GNOME stopped applying it.
+    # Declaring it here makes it part of the managed state instead.
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
+      name = "Switch User";
+      command = "bash /run/current-system/sw/bin/switch-session";
+      binding = "<Shift><Super>u";
     };
 
     "org/gnome/shell" = {

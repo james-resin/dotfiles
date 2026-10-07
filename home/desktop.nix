@@ -8,11 +8,14 @@
     ./base.nix
     ../modules/ghostty.nix
     ../modules/gnome.nix
+    ../modules/wireplumber.nix
   ];
 
   home.packages = with pkgs; [
     slack
     inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
     zoom-us
+	audacity
+	chromium
   ];
 }
